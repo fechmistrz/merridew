@@ -47,7 +47,7 @@ def parse_bib(input_bib_file):
     with open(input_bib_file, "r") as bib_file:
         for raw_line in bib_file:
             line = raw_line.strip()
-            if accepted_line.match(line):
+            if not accepted_line.match(line):
                 raise NotImplementedError("Syntax error in .bib file: " + line)
                 
             match = re.search(" *@([^ ]+) *{ *([^,]+),", line)
