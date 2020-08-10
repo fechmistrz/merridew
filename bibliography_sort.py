@@ -76,8 +76,7 @@ def parse_bib(input_bib_file):
 def bibliography_sort(input_bib_file):
     """Main function sorting bibliography entries"""
 
-    logging.basicConfig(level=logging.DEBUG, format="%(levelname)s: %(message)s")
-    logging.info("X")
+    logging.basicConfig(level=logging.WARNING, format="%(levelname)s: %(message)s")
     entries = parse_bib(input_bib_file)
     entries = sorted(list(entries.values()), key=sort_key)
     with open(input_bib_file, "w") as output_bib_file:
