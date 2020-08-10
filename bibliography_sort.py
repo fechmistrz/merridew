@@ -42,9 +42,14 @@ def print_nicely(lst):
 def parse_bib(input_bib_file):
     """Converts .bib file into list of entries"""
     entries = dict()
+    accepted_line = re.compile('^( *[A-Z]+ *= *\{.*\},|^@[a-z]+ \{[a-z]+_?[0-9]+,|\}|\s*)$')
+
     with open(input_bib_file, "r") as bib_file:
         for raw_line in bib_file:
             line = raw_line.strip()
+            if accepted_line.match(line):
+                raise NotImplementedError("Syntax error in .bib file: " + line)
+                
             match = re.search(" *@([^ ]+) *{ *([^,]+),", line)
             if match:
                 # when line is: "@article {alexander28,"
