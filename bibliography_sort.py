@@ -39,6 +39,16 @@ def print_nicely(lst):
     return output
 
 
+def validate_authors(authors):
+    regex = r"^(Mc|\\')?[A-Z][a-z'\\]+(-[A-Z][a-z]+)?, (De |\\')?[A-Z][a-z'\\]+(-[A-Z][a-z'\\]+)? *((Mc)?[A-Z]\. *)*,?$"
+    authors = authors.replace("{", "")
+    authors = authors.replace("}", "")
+    for author in authors.split(" and "):
+        if not re.match(regex, author):
+            raise ValueError(f"Incorrect author syntax '{author}' in '{authors}'")
+    return
+    
+
 def parse_bib(input_bib_file):
     """Converts .bib file into list of entries"""
     entries = dict()
@@ -68,6 +78,9 @@ def parse_bib(input_bib_file):
                 key = match.group(1).lower()
                 value = match.group(2)
                 logging.info("parse_bib => key {} value {}".format(key, value))
+
+                if key == "author":
+                    validate_authors(value)
 
                 entries[bibtex_name][key] = value
     return entries
