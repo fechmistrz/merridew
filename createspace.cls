@@ -49,7 +49,7 @@
 \RequirePackage{float}      % figures with [H]
 \RequirePackage{subcaption} % captions to subfigures
 
-\RequirePackage[backref]{hyperref}
+\RequirePackage{hyperref} % with [backref], adds link from bib entry to citation
 
 \theoremstyle{plain}
 \newcounter{counter}
