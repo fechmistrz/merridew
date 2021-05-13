@@ -3,10 +3,9 @@
 This script opens .bib file and sorts it's entries by year
 """
 
-import os
+import argparse
 import logging
 import re
-import sys
 
 def strip_year(text):
     """Filter non-digit characters and convert to int"""
@@ -97,4 +96,7 @@ def bibliography_sort(input_bib_file):
 
 
 if __name__ == "__main__":
-    bibliography_sort(sys.argv[1])
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--bib", help="Path to the bibliography file", required=True)
+    args = parser.parse_args()
+    bibliography_sort(args.bib)
