@@ -21,7 +21,7 @@ def sort_key(entry):
     year = strip_year(entry["year"])
     output = "{} {}".format(year, name)
 
-    logging.info("sort_key => {}".format(output))
+    logging.debug("sort_key => %s", output)
     return output
 
 
@@ -65,7 +65,7 @@ def parse_bib(input_bib_file):
                 # when line is: "@article {alexander28,"
                 bibtex_type = match.group(1).lower()
                 bibtex_name = match.group(2)
-                logging.info("parse_bib => type {} name {}".format(bibtex_type, bibtex_name))
+                logging.debug("parse_bib => type %s name %s", bibtex_type, bibtex_name)
 
                 entries[bibtex_name] = {
                     "bibtex_type": bibtex_type,
@@ -77,7 +77,7 @@ def parse_bib(input_bib_file):
                 # when line is: "    author = {Alexander, J. W.},"
                 key = match.group(1).lower()
                 value = match.group(2)
-                logging.info("parse_bib => key {} value {}".format(key, value))
+                logging.debug("parse_bib => key %s value %s", key, value)
 
                 if key == "author":
                     validate_authors(value)
@@ -89,7 +89,7 @@ def parse_bib(input_bib_file):
 def bibliography_sort(input_bib_file):
     """Main function sorting bibliography entries"""
 
-    logging.basicConfig(level=logging.WARNING, format="%(levelname)s: %(message)s")
+    logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
     entries = parse_bib(input_bib_file)
     entries = sorted(list(entries.values()), key=sort_key)
     with open(input_bib_file, "w") as output_bib_file:
