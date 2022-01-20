@@ -40,7 +40,7 @@ def print_nicely(lst):
 
 
 def validate_authors(authors):
-    regex = r"^(Mc|\\'|De |Van |\\\")?[A-Z][a-zćê'\"\\]+(-[A-Z][a-z]+)?, (De |\\')?[A-Z][a-z'\"\\]+(-[A-Z][a-z'\\]+)? *((Mc)?[A-Z]\. *)*,?$"
+    regex = r"^(Mc|\\'|De |van |Van |van der |\\\")?[A-Z][a-zćê'\"\\]+(-[A-Z][a-z]+)?, (De |\\')?[A-Z][a-z'\"\\]+(-[A-Z][a-z'\\]+)? *((Mc)?[A-Z]\. *)*,?$"
     authors = authors.replace("{", "")
     authors = authors.replace("}", "")
     for author in authors.split(" and "):
