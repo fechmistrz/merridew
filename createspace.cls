@@ -1,17 +1,28 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{createspace}[2018/05/05 Create Space class]
+\ProvidesClass{createspace}[2022/01/20 Create Space class]
 \LoadClass[twoside, 9pt]{extbook}
 
+% to handle ą, ć, ę, etc.
 \RequirePackage[utf8]{inputenc}
 \RequirePackage[T1]{fontenc}
 \RequirePackage{polski}
 
+% to make the text as compact as possible
 \RequirePackage{Alegreya}
-\RequirePackage[tracking]{microtype}
+\RequirePackage[
+    activate={true,nocompatibility},
+    final,
+    tracking=true,
+    kerning=true,
+    spacing=true,
+    factor=1100,
+    stretch=10,
+    shrink=10
+]{microtype}
 \RequirePackage[compact]{titlesec}
 \RequirePackage{paralist}
 
-% \RequirePackage[table]{xcolor} legacy stuff?
+% popular page size in Amazon's KDP
 \RequirePackage[
     paperwidth=6.14in,
     paperheight=9.21in,
@@ -35,6 +46,7 @@
 \pagestyle{fancy}
 \fancyhead{}
 \fancyfoot{}
+% 341      Rozdział 7. Kalifat algebry | 7.2 Pierścień adeli              342 |
 \fancyhead[LE]{\thepage}
 \fancyhead[RE]{\nouppercase{\leftmark}}
 \fancyhead[LO]{\nouppercase{\rightmark}}
@@ -42,14 +54,18 @@
 \renewcommand{\headrulewidth}{0.4pt}
 \renewcommand{\footrulewidth}{0.0pt}
 
-\RequirePackage{amsmath} % \DeclareMathOperator
-\RequirePackage{amssymb} % \mathbb
-\RequirePackage{amsthm}  % \newtheorem
-
-\RequirePackage{float}      % figures with [H]
+% \DeclareMathOperator:
+\RequirePackage{amsmath}
+% \mathbb:
+\RequirePackage{amssymb}
+% \theoremstyle, \newtheorem:
+\RequirePackage{amsthm}
+% [H] for figure environment:
+\RequirePackage{float}
+% \subcaption for minipage inside figure:
 \RequirePackage{subcaption} % captions to subfigures
-
-\RequirePackage{hyperref} % with [backref], adds link from bib entry to citation
+% clickable links, add [backref] for links from bib entries to citations
+\RequirePackage{hyperref}
 
 \theoremstyle{plain}
 \newcounter{counter}
