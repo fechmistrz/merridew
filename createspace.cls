@@ -57,6 +57,12 @@
 \RequirePackage{subcaption} % captions to subfigures
 % clickable links, add [backref] for links from bib entries to citations
 \RequirePackage{hyperref}
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
 
 \theoremstyle{plain}
 \newcounter{counter}
