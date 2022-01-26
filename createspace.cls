@@ -76,3 +76,9 @@
 \newtheorem{theorem}{Twierdzenie}
 \newtheorem{warning}[counter]{Uwaga}
 \newtheorem{tobedone}[counter]{Wymaga przeredagowania}
+
+% https://www.reddit.com/r/LaTeX/comments/athzn1/replacing_leq_and_geq_with_leqslant_and_geqslant/
+\let\savedleq=\leq %
+\let\savedgeq=\geq %
+\let\le=\leqslant %
+\let\ge=\geqslant %
