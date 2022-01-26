@@ -45,6 +45,9 @@
 \renewcommand{\headrulewidth}{0.4pt}
 \renewcommand{\footrulewidth}{0.0pt}
 
+% https://tex.stackexchange.com/questions/22012/hyperref-and-imakeidx-do-not-work-together
+\RequirePackage{imakeidx}
+
 % \DeclareMathOperator:
 \RequirePackage{amsmath}
 % \mathbb:
