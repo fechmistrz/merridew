@@ -47,10 +47,10 @@ def validate_authors(authors):
     # Marie-Claude Sarmant-Durix
     # lowercase diacritics are too numerous to explain
     UP = "[A-ZŠ]"
-    LO = "[a-zßáäèéêóüć]"
+    LO = "[a-züáóäènêßćé]"
     # "".join(sorted(LO))
 
-    regex = f"(De |git Mc|van |van der )?{UP}{LO}+(-{UP}{LO}+)?, ({UP}{LO}+-)?{UP}{LO}+( {UP}\.)*$"
+    regex = f"(De |Mc|van |van der )?{UP}{LO}+(-{UP}{LO}+)?, ({UP}{LO}+-)?{UP}{LO}+( {UP}\.)*$"
     authors = authors.replace("{", "")
     authors = authors.replace("}", "")
     for author in authors.split(" and "):
