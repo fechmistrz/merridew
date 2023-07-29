@@ -25,13 +25,13 @@ def find_replace(input_file):
                 logging.warning("Changing '{}' => '{}'".format(line.strip(), new_line.strip()))
 
             new_content.append(new_line)
-                
+
             match = re.search(r"^\\bibitem.*", line)
             if match:
                 bibitem_line = True
             else:
                 bibitem_line = False
-    
+
     with open(input_file, "w") as f:
         for line in new_content:
             f.write(line)

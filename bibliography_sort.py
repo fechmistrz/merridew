@@ -18,7 +18,11 @@ def sort_key(entry):
     """Print 'year name', key for sorting function"""
 
     name = entry["bibtex_name"]
-    year = strip_year(entry["year"])
+    try:
+        year = strip_year(entry["year"])
+    except:
+        # workaround for @unpublished
+        year = strip_year(entry["note"])
     output = "{} {}".format(year, name)
 
     logging.debug("sort_key => %s", output)
@@ -32,8 +36,10 @@ def print_nicely(lst):
     for entry in lst:
         bibtex_name = entry.pop("bibtex_name")
         bibtex_type = entry.pop("bibtex_type")
-        tags = sorted(["    {} = {}".format(key.upper(), entry[key]) for key in entry])
-        output += "@{} {{{},\n".format(bibtex_type, bibtex_name)
+        official_fields = get_mandatory_fields("@" + bibtex_type) + get_optional_fields("@" + bibtex_type)
+        human_friendly_keys = [key for key in official_fields if key in entry] + [key for key in entry if key not in official_fields]
+        tags = ["    {} = {}".format(key.upper(), entry[key]) for key in human_friendly_keys]
+        output += f"@{bibtex_type} {{{bibtex_name},\n"
         output += "\n".join(tags)
         output += "\n}\n\n"
     return output
@@ -41,16 +47,16 @@ def print_nicely(lst):
 
 def validate_authors(authors):
     # old_regex = r"^(Mc|\\'|De |van |Van |van der |\\\")?[A-Z][a-zćê'\"\\]+(-[A-Z][a-z~\\]+)?, (De |\\')?[A-Z][a-z'\"\\]+(-[A-Z][a-z'\\]+)? *((Mc)?[A-Z]\. *)*,?$"
-    
+
     # Zoran Škoda
     # David Heath-Brown
     # Marie-Claude Sarmant-Durix
     # lowercase diacritics are too numerous to explain
-    UP = "[A-ZŠ]"
-    LO = "[a-züáóäènêßćé]"
+    UP = "[A-ZÉÖŠ]"
+    LO = "[a-zßááäèéêíñóöüćł]"
     # "".join(sorted(LO))
 
-    regex = f"(De |Mc|van |van der )?{UP}{LO}+(-{UP}{LO}+)?, ({UP}{LO}+-)?{UP}{LO}+( {UP}\.)*$"
+    regex = f"(De |Mc|Van |van |van der )?{UP}{LO}+(-{UP}{LO}+)?, ({UP}{LO}+-|De )?{UP}{LO}+( (Mc)?{UP}\.)*$"
     authors = authors.replace("{", "")
     authors = authors.replace("}", "")
     for author in authors.split(" and "):
@@ -112,6 +118,49 @@ def bibliography_sort(input_bib_file):
         output_bib_file.write(print_nicely(entries))
 
 
+def get_mandatory_fields(entry_type):
+    mandatory_fields = {
+        "@article": ["author", "title", "journal", "fjournal", "year"],
+        "@book": ["author", "title", "publisher", "year"],
+        "@incollection": ["author", "title", "booktitle", "publisher", "year"],
+        "@inproceedings": ["author", "title", "booktitle", "year"],
+        "@misc": [],
+        "@phdthesis": ["author", "title", "school", "year"],
+        "@unpublished": ["author", "title", "note"],
+    }
+
+    if entry_type not in mandatory_fields:
+        raise Exception("I don't know which fields are mandatory for %s!" % entry_type)
+    return mandatory_fields[entry_type]
+
+
+def get_optional_fields(entry_type):
+    optional_fields = {
+        "@article": ["volume", "number", "pages", "month", "note"],
+        "@book": ["volume", "number", "series", "address", "edition", "month", "note"],
+        "@incollection": ['editor', 'volume', 'number', 'series', 'type', 'chapter', 'pages', 'address', 'edition', 'month', 'note'],
+        "@inproceedings": ["editor", "volume", "number", "series", "pages", "address", "month", "organization", "publisher", "note"],
+        "@misc": ["author", "title", "howpublished", "month", "year", "note"],
+        "@phdthesis": ["type", "address", "month", "note"],
+        "@unpublished": ["month", "year"],
+    }.get(entry_type, [])
+
+    if not optional_fields:
+        logging.warning("I don't know which fields are optional for %s!" % entry_type)
+        return []
+
+    optional_agnostic_fields = [
+        "doi", "pages", "url",
+        "issn", "isbn",
+        "mrclass", "mrnumber", "mrreviewer", # used in citations from MathSciNet
+        "zbl"                                # used in ZentralBlatt Math
+    ]
+    optional_agnostic_fields = [f for f in optional_agnostic_fields if f not in optional_fields]
+    optional_fields += optional_agnostic_fields
+
+    return optional_fields
+
+
 def check_mandatory_optional(input_bib_file):
     """Looks for missing mandatory or illegal optional fields"""
 
@@ -120,32 +169,31 @@ def check_mandatory_optional(input_bib_file):
     field = "???"
     fields = list()
 
-    correct_values = {
-        "@article": ["author", "title", "journal", "year"],
-        "@book": ["author", "title", "publisher", "year"],
-        "@incollection": ["author", "title", "booktitle", "publisher", "year"],
-        "@inproceedings": ["author", "title", "booktitle", "year"],
-        "@misc": [],
-        "@phdthesis": ["author", "title", "school", "year"],
-    }
-
     with open(input_bib_file, "r") as bib_file:
         for raw_line in bib_file:
             line = raw_line.strip()
 
             if line.startswith("@"):
                 entry_type, entry_name = line.replace("{", "").replace(",", "").split()
-                if entry_type not in correct_values.keys():
-                    raise Exception(f"ENTRY TYPE {entry_type}")
+                must_have = get_mandatory_fields(entry_type)
+                may_have = get_optional_fields(entry_type)
 
             elif " = " in line:
                 field = line.split(" = ")[0].lower()
                 fields.append(field)
 
             elif line.startswith("}"):
-                missing = [f for f in correct_values[entry_type] if f not in fields]
+                missing = set(must_have) - set(fields)
                 if missing:
                     raise Exception(f"Missing {missing} in {entry_name}!")
+
+
+                unexpected_fields = set(fields) - set(must_have)
+                if may_have:
+                    unexpected_fields = sorted(list(set(unexpected_fields) - set(may_have)))
+                if unexpected_fields:
+                    logging.warning(f"Found unexpected fields: {unexpected_fields} in {entry_name} ({entry_type})")
+
                 fields = list()
 
 
