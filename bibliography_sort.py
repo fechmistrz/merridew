@@ -22,7 +22,10 @@ def sort_key(entry):
         year = strip_year(entry["year"])
     except:
         # workaround for @unpublished
-        year = strip_year(entry["note"])
+        try:
+            year = strip_year(entry["note"])
+        except:
+            raise Exception(f"Cannot find year in {entry}")
     output = "{} {}".format(year, name)
 
     logging.debug("sort_key => %s", output)
@@ -53,7 +56,7 @@ def validate_authors(authors):
     # Marie-Claude Sarmant-Durix
     # lowercase diacritics are too numerous to explain
     UP = "[A-ZÉÖŠ]"
-    LO = "[a-zßááäèéêíñóöüćł]"
+    LO = "[a-zßááäâèéêíñóöüćł]"
     # "".join(sorted(LO))
 
     regex = f"(De |Mc|Van |van |van der )?{UP}{LO}+(-{UP}{LO}+)?, ({UP}{LO}+-|De )?{UP}{LO}+( (Mc)?{UP}\.)*$"
