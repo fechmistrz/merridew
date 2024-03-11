@@ -71,7 +71,7 @@ def validate_authors(authors):
 def parse_bib(input_bib_file):
     """Converts .bib file into list of entries"""
     entries = dict()
-    accepted_line = re.compile("^( *[A-Z]+ *= *\{.*\},|^@[a-z]+ \{[a-z]+_?[0-9]+,|\}|\s*)$")
+    accepted_line = re.compile("^( *[a-zA-Z]+ *= *\{.*\},|^@[a-z]+ \{[a-z]+_?[0-9]+,|\}|\s*)$")
 
     with open(input_bib_file, "r") as bib_file:
         for raw_line in bib_file:
