@@ -56,7 +56,7 @@ def validate_authors(authors):
     # Marie-Claude Sarmant-Durix
     # lowercase diacritics are too numerous to explain
     UP = "[A-ZÉÖŠ]"
-    LO = "[a-zßááâäèéêíñóöüąćł]"
+    LO = "[a-zßááâăäèéêíñóöüąćłśę]"
     # "".join(sorted(LO))
 
     regex = f"(De |Mc|Van |van |van der )?{UP}{LO}+(-{UP}{LO}+)?, ({UP}{LO}+-|De )?{UP}{LO}+( (Mc)?{UP}\.)*$"
