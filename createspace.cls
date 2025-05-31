@@ -109,6 +109,26 @@
 	rightmargin=0cm % Outside right margin width
 ]{propositionBox}
 
+\newtheorem{exampleT}[counter]{Przykład} % Theorems, the first argument is the theorem name, the second the theorem title used before the number and the third optional argument is whether to number under chapters (e.g. 2.1) or sections (e.g. 2.1.1)
+\newenvironment{example}{\begin{exampleBox}\begin{exampleT}}{\end{exampleT}\end{exampleBox}}
+\newmdenv[
+	skipabove=\topskip, % Whitespace above box
+	skipbelow=0pt, % Whitespace below box
+	rightline=false, % Right line visible
+	leftline=true, % Left line visible
+	topline=false, % Top line visible
+	bottomline=false, % Bottom line visible
+	linecolor=black, % Line color
+	linewidth=4pt, % Line width
+	backgroundcolor=purpleLeo!30, % Background color
+	innerleftmargin=5pt, % Inside left margin width
+	innerrightmargin=5pt, % Inside right margin width
+	innertopmargin=10pt, % Inside top margin height
+	innerbottommargin=5pt, % Inside bottom margin height
+	leftmargin=0cm, % Outside left margin width
+	rightmargin=0cm % Outside right margin width
+]{exampleBox}
+
 \newtheorem{corollaryT}[counter]{Wniosek} % Theorems, the first argument is the theorem name, the second the theorem title used before the number and the third optional argument is whether to number under chapters (e.g. 2.1) or sections (e.g. 2.1.1)
 \newenvironment{corollary}{\begin{corollaryBox}\begin{corollaryT}}{\end{corollaryT}\end{corollaryBox}}
 \newmdenv[
@@ -209,7 +229,6 @@
 \theoremstyle{plain}
 \numberwithin{counter}{section}
 \newtheorem{conjecture}[counter]{Hipoteza}
-\newtheorem{example}[counter]{Przyk\l{}ad}
 \newtheorem{lemma}[counter]{Lemat}
 \newtheorem{theorem}[counter]{Twierdzenie}
 \newtheorem{warning}[counter]{Uwaga}
