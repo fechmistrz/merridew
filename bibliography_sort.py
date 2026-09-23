@@ -59,7 +59,7 @@ def validate_authors(authors):
     LO = "[a-zßááâăäèéêíñóöüąćłśę]"
     # "".join(sorted(LO))
 
-    regex = f"(De |Mc|Van |van |van der )?{UP}{LO}+(-{UP}{LO}+)?, ({UP}{LO}+-|De )?{UP}{LO}+( (Mc)?{UP}\.)*$"
+    regex = rf"(De |Mc|Van |van |van der )?{UP}{LO}+(-{UP}{LO}+)?, ({UP}{LO}+-|De )?{UP}{LO}+( (Mc)?{UP}\.)*$"
     authors = authors.replace("{", "")
     authors = authors.replace("}", "")
     for author in authors.split(" and "):
@@ -71,7 +71,7 @@ def validate_authors(authors):
 def parse_bib(input_bib_file):
     """Converts .bib file into list of entries"""
     entries = dict()
-    accepted_line = re.compile("^( *[a-zA-Z]+ *= *\{.*\},|^@[a-z]+ \{[a-z]+_?[0-9]+,|\}|\s*)$")
+    accepted_line = re.compile(r"^( *[a-zA-Z]+ *= *\{.*\},|^@[a-z]+ \{[a-z]+_?[0-9]+,|\}|\s*)$")
 
     with open(input_bib_file, "r") as bib_file:
         for raw_line in bib_file:
